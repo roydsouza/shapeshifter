@@ -30,7 +30,7 @@
 
 ### Group B — Safety-cage design fix (separate briefing, escalate to Claude)
 
-- [ ] **DEF-003 — Local gas limit leaks global step count** `[ESCALATE → Claude]` <!-- id: def-003 -->
+- [/] **DEF-003 — Local gas limit leaks global step count** `[ESCALATE → Claude]` <!-- id: def-003 -->
   - **Files:** `interpreter.py` (lines 54–56, 99–101)
   - **Symptom:** The `run_with_gas` primitive sets `local_max_steps = self.step_count + limit`. But the global `step_count` keeps incrementing across all evaluations in the session, so "local budget" is meaningless if `step_count` is already high. A `run_with_gas 100` call made at step 9,950 will hit the global limit (10,000) after 50 steps, not 100 — and a call made at step 5,000 effectively has a 5,000-step local budget instead of 100.
   - **Fix:** `run_with_gas` should track its own isolated step counter, not derive from the shared global. One clean approach: pass a mutable `[remaining]` list alongside `local_max_steps`, decremented independently per recursive call under a `run_with_gas` frame.

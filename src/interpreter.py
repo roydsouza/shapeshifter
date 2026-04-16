@@ -1,5 +1,6 @@
 import operator
 import time
+import sys
 from otel_sim import otel
 
 class Env(dict):
@@ -18,10 +19,13 @@ class Env(dict):
             return None
 
 class ShapeshifterInterpreter:
-    def __init__(self, max_steps=10000):
+    def __init__(self, max_steps=500):
         self.global_env = self._default_env()
         self.max_steps = max_steps
         self.step_count = 0
+        
+        # Safety Ceiling: We must stay below the Python recursion limit (usually 1000)
+        # to ensure the interpreter's own gas limits catch loops first.
 
     def _default_env(self):
         env = Env()
@@ -42,18 +46,21 @@ class ShapeshifterInterpreter:
         })
         return env
 
-    def evaluate(self, expr, env=None, local_max_steps=None):
+    def evaluate(self, expr, env=None, local_max=None):
         if env is None:
             env = self.global_env
         
-        # Gas Limit Check
+        # 1. Global Hard Ceiling Check
         self.step_count += 1
         if self.step_count > self.max_steps:
-            raise RecursionError(f"Global Gas Limit Exceeded: {self.max_steps} steps")
+            raise RecursionError(f"Hard Global Gas Limit Exceeded: {self.max_steps} steps")
         
-        if local_max_steps is not None:
-             if self.step_count > local_max_steps:
-                 raise RecursionError(f"Local Gas Limit Exceeded: {local_max_steps} steps")
+        # 2. Local Isolated Budget Check
+        if local_max is not None:
+             # local_max[0] tracks "steps remaining in this cage"
+             if local_max[0] <= 0:
+                 raise RecursionError(f"Local Isolated Gas Limit Exceeded")
+             local_max[0] -= 1
 
         # Atoms
         if isinstance(expr, str):
@@ -75,34 +82,37 @@ class ShapeshifterInterpreter:
         
         elif op == 'if':
             (_, condition, true_branch, false_branch) = expr
-            if self.evaluate(condition, env, local_max_steps):
-                return self.evaluate(true_branch, env, local_max_steps)
+            if self.evaluate(condition, env, local_max):
+                return self.evaluate(true_branch, env, local_max)
             else:
-                return self.evaluate(false_branch, env, local_max_steps)
+                return self.evaluate(false_branch, env, local_max)
 
         elif op == 'set':
             (_, name, val_expr) = expr
-            val = self.evaluate(val_expr, env, local_max_steps)
+            val = self.evaluate(val_expr, env, local_max)
             env[name] = val
             return val
 
         elif op == 'defn': # Named function definition
             (_, name, params, body) = expr
-            env[name] = self.evaluate(['lambda', params, body], env, local_max_steps)
+            env[name] = self.evaluate(['lambda', params, body], env, local_max)
             return f"defined:{name}"
 
         elif op == 'lambda':
             (_, params, body) = expr
-            return lambda *args: self.evaluate(body, Env(params, args, env), local_max_steps)
+            return lambda *args: self.evaluate(body, Env(params, args, env), local_max)
 
         elif op == 'run_with_gas':
             (_, limit, sub_expr) = expr
-            # Note: local_max_steps is additive for this simple impl
-            return self.evaluate(sub_expr, env, self.step_count + limit)
+            # Initialize a new isolated local budget.
+            # This is nested: it cannot exceed the current local_max if one exists.
+            current_local_remaining = local_max[0] if local_max else (self.max_steps - self.step_count)
+            new_limit = min(limit, current_local_remaining)
+            return self.evaluate(sub_expr, env, [new_limit])
 
         # Function Calls
-        proc = self.evaluate(op, env, local_max_steps)
-        args_evaled = [self.evaluate(arg, env, local_max_steps) for arg in expr[1:]]
+        proc = self.evaluate(op, env, local_max)
+        args_evaled = [self.evaluate(arg, env, local_max) for arg in expr[1:]]
         
         start_time = time.perf_counter()
         res = proc(*args_evaled) if callable(proc) else proc
