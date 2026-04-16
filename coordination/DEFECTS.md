@@ -16,13 +16,13 @@
 
 ### Group A — Experiment file bugs (fix together, one briefing)
 
-- [ ] **DEF-001 — Undefined `get` form in experiments 01 and 02** <!-- id: def-001 -->
+- [/] **DEF-001 — Undefined `get` form in experiments 01 and 02** <!-- id: def-001 -->
   - **Files:** `experiment_01.py` (lines 14, 15, 32), `experiment_02.py` (lines 22, 38)
   - **Symptom:** The DSL expressions use `['get', 'input']` and `['get', 'increment_amount']`, but the interpreter has no `get` special form. `evaluate` performs symbol lookup by evaluating a bare string directly (e.g., `'input'`). When `get` is not found in any environment, `evaluate` returns the literal string `'get'` rather than raising an error, so the defect is **silent** — the agent appears to run but the strategy is computing garbage.
   - **Fix:** Replace all `['get', <sym>]` occurrences with bare `<sym>` strings. Example: `['add', ['get', 'input'], ['get', 'increment_amount']]` → `['add', 'input', 'increment_amount']`.
   - **Verification:** `python3 experiment_01.py` must print `11`, `110`, `1000` in that order.
 
-- [ ] **DEF-002 — `interp.env` AttributeError in experiment 02** <!-- id: def-002 -->
+- [/] **DEF-002 — `interp.env` AttributeError in experiment 02** <!-- id: def-002 -->
   - **Files:** `experiment_02.py` (line 17)
   - **Symptom:** `interp.env['slow_add'] = slow_add` raises `AttributeError: 'ShapeshifterInterpreter' object has no attribute 'env'`. The interpreter exposes its environment as `interp.global_env`, not `interp.env`.
   - **Fix:** Change `interp.env['slow_add'] = slow_add` → `interp.global_env['slow_add'] = slow_add`.

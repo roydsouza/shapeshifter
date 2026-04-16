@@ -11,11 +11,11 @@ def run_experiment_01():
     
     # 1. Define initial strategy: Increment by 1
     interp.evaluate(['set', 'increment_amount', 1])
-    interp.evaluate(['set', 'strategy', ['quote', ['add', ['get', 'input'], ['get', 'increment_amount']]]])
+    interp.evaluate(['set', 'strategy', ['quote', ['add', 'input', 'increment_amount']]])
     
     def run_agent(val):
         interp.evaluate(['set', 'input', val])
-        return interp.evaluate(interp.evaluate(['get', 'strategy']))
+        return interp.evaluate(interp.evaluate('strategy'))
 
     print(f"Initial Run (input 10): {run_agent(10)}") # Expected 11
     
@@ -29,7 +29,7 @@ def run_experiment_01():
     # 3. Agent rewrites its logic entirely (Homoiconicity)
     # Original: (add input increment) -> New: (mul input increment)
     print("Agent is rewriting its logic from 'add' to 'mul'...")
-    interp.evaluate(['set', 'strategy', ['quote', ['mul', ['get', 'input'], ['get', 'increment_amount']]]])
+    interp.evaluate(['set', 'strategy', ['quote', ['mul', 'input', 'increment_amount']]])
     
     print(f"Post-Logic-Rewrite Run (input 10): {run_agent(10)}") # Expected 1000
 

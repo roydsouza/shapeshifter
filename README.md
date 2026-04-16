@@ -17,15 +17,16 @@ The project mirrors the **Schwarzschild Assembly** operational model:
 3. **Safety (The Cage):** Execution is protected by "Gas Limits" (step counters) and sandboxed evaluation frames to prevent non-terminating self-improvements.
 4. **Darwinian Evolution:** A focus on generative mutation and fitness selection rather than direct, fragile overwriting.
 
-## Core Components
-- [interpreter.py](file:///Users/rds/antigravity/shapeshifter/interpreter.py): The homoiconic execution engine.
-- [otel_sim.py](file:///Users/rds/antigravity/shapeshifter/otel_sim.py): The sensory substrate for performance metrics.
+- [**DESIGN.md**](docs/DESIGN.md): The architectural vision and rationale for the Darwin-Gödel Machine.
+- [**REFERENCE.md**](docs/REFERENCE.md): Technical specification of the Shapeshifter DSL primitives and environment.
+- [interpreter.py](file:///Users/rds/antigravity/shapeshifter/src/interpreter.py): The homoiconic execution engine.
+- [otel_sim.py](file:///Users/rds/antigravity/shapeshifter/src/otel_sim.py): The sensory substrate for performance metrics.
 
 ## Getting Started
 Run the experiments in order to see the language evolve:
-1. `python3 experiment_01.py` - Simple self-modification.
-2. `python3 experiment_02.py` - OTel-aware optimization.
-3. `python3 experiment_03.py` - Recursive self-improvement with Gas Limits.
+1. `python3 experiments/001_Homoiconicity/experiment_01.py` - Simple self-modification.
+2. `python3 experiments/002_OTel_Optimization/experiment_02.py` - OTel-aware optimization.
+3. `python3 experiments/003_Recursive_Improvement/experiment_03.py` - Recursive self-improvement with Gas Limits.
 
 ---
 **📍 Part of Project AntiGravity**

@@ -14,17 +14,17 @@ def run_experiment_02():
         time.sleep(0.1) # Artifical bottleneck
         return a + b
     
-    interp.env['slow_add'] = slow_add
+    interp.global_env['slow_add'] = slow_add
     
     print("--- Experiment 02: Performance-Aware Agent ---")
     
     # 1. Initial Strategy uses the "slow" implementation
-    interp.evaluate(['set', 'strategy', ['quote', ['slow_add', ['get', 'input'], 1]]])
+    interp.evaluate(['set', 'strategy', ['quote', ['slow_add', 'input', 1]]])
     
     print("Agent running 5 times with initial strategy...")
     for i in range(5):
         interp.evaluate(['set', 'input', i])
-        interp.evaluate(interp.evaluate(['get', 'strategy']))
+        interp.evaluate(interp.evaluate('strategy'))
 
     # 2. Agent checks metrics
     metrics = interp.evaluate(['get_metrics'])
@@ -35,14 +35,14 @@ def run_experiment_02():
     if slow_add_metrics.get('avg', 0) > 0.05:
         print("Latency is too high! Agent is switching to 'add'...")
         # Self-Modification: Rewrite strategy to use native 'add'
-        interp.evaluate(['set', 'strategy', ['quote', ['add', ['get', 'input'], 1]]])
+        interp.evaluate(['set', 'strategy', ['quote', ['add', 'input', 1]]])
 
     # 4. Verify Improvement
     print("Agent running 5 times with optimized strategy...")
     start = time.time()
     for i in range(5):
         interp.evaluate(['set', 'input', i])
-        interp.evaluate(interp.evaluate(['get', 'strategy']))
+        interp.evaluate(interp.evaluate('strategy'))
     end = time.time()
     
     print(f"Post-Optimization total time for 5 runs: {end - start:.4f}s")

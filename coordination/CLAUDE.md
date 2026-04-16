@@ -68,6 +68,10 @@ Fix the defect first (separate commit), then build the feature.
 
 | Path | Purpose |
 |---|---|
+| `coordination/` | Agent governance, tasks, defects, and sync logs |
+| `src/` | Core Shapeshifter implementation |
+| `docs/` | Design and reference documentation |
+| `experiments/` | Research laboratory experiments |
 | `analyst-inbox/` | Forge files briefings here after a run passes |
 | `crucible-verdicts/` | Crucible files its verdicts here |
 | `analyst-verdicts/` | Claude files verdicts here (escalations only) |
@@ -77,6 +81,6 @@ File naming convention: `YYYY-MM-DD-HHMMSS-<topic>.md`
 
 ## §9 Synchronization Protocol
 
-- Update `SYNC_LOG.md` (YAML frontmatter + prose) before every session end or context switch.
+- Update `coordination/SYNC_LOG.md` (YAML frontmatter + prose) before every session end or context switch.
 - Use `git` at the repo root for versioned state capture.
 - Run `python3 ~/antigravity/scripts/handoff.py` on session exit (per station-wide convention).
