@@ -63,7 +63,7 @@ class ShapeshifterInterpreter:
 
     def _build_capability_env(self):
         """Builds a StrictEnv for Phase 2a containing only whitelisted primitives."""
-        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print', 'not', 'and', 'or']
+        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print', 'not', 'and', 'or', 'dict-get', 'get_metrics']
         cage_env = StrictEnv()
         
         # Populate purely from the global_env whitelisted keys
@@ -148,6 +148,14 @@ class ShapeshifterInterpreter:
                 if res:
                     return res
             return False
+
+        elif op == 'dict-get':
+            (_, dict_expr, key_expr) = expr
+            d = self.evaluate(dict_expr, env, local_max)
+            k = self.evaluate(key_expr, env, local_max)
+            if not isinstance(d, dict):
+                raise TypeError(f"dict-get: First argument must be a dict, got {type(d)}")
+            return d[k]
 
         elif op == 'run_with_gas':
             (_, limit, sub_expr) = expr
