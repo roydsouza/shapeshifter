@@ -3,6 +3,10 @@ import time
 import sys
 from otel_sim import otel
 
+class CapabilityError(Exception):
+    """Raised when a symbol is accessed in a capability-gated environment that is not in the whitelist."""
+    pass
+
 class Env(dict):
     """An environment with an optional outer environment for lexical scoping."""
     def __init__(self, params=(), args=(), outer=None):
@@ -17,6 +21,16 @@ class Env(dict):
             return self.outer.find(var)
         else:
             return None
+
+class StrictEnv(Env):
+    """A capability-gated environment that raises CapabilityError if a symbol is missing in its chain."""
+    def find(self, var):
+        if var in self:
+            return self
+        if self.outer:
+            return self.outer.find(var)
+        # If we reach the end of the chain (outer is None) and haven't found it, REJECT.
+        raise CapabilityError(f"Access Denied: Symbol '{var}' is not in the whitelist.")
 
 class ShapeshifterInterpreter:
     def __init__(self, max_steps=500):
@@ -45,6 +59,17 @@ class ShapeshifterInterpreter:
             'cons': lambda x, y: [x] + y,
         })
         return env
+
+    def _build_capability_env(self):
+        """Builds a StrictEnv for Phase 2a containing only whitelisted primitives."""
+        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin']
+        cage_env = StrictEnv()
+        
+        # Populate purely from the global_env whitelisted keys
+        for symbol in whitelist:
+            if symbol in self.global_env:
+                cage_env[symbol] = self.global_env[symbol]
+        return cage_env
 
     def evaluate(self, expr, env=None, local_max=None):
         if env is None:
@@ -102,13 +127,22 @@ class ShapeshifterInterpreter:
             (_, params, body) = expr
             return lambda *args: self.evaluate(body, Env(params, args, env), None)
 
+        elif op == 'begin':
+            res = None
+            for sub_expr in expr[1:]:
+                res = self.evaluate(sub_expr, env, local_max)
+            return res
+
         elif op == 'run_with_gas':
             (_, limit, sub_expr) = expr
             # Initialize a new isolated local budget.
             # This is nested: it cannot exceed the current local_max if one exists.
             current_local_remaining = local_max[0] if local_max else (self.max_steps - self.step_count)
             new_limit = min(limit, current_local_remaining)
-            return self.evaluate(sub_expr, env, [new_limit])
+            
+            # Automatically switch to a capability-restricted environment
+            cage_env = self._build_capability_env()
+            return self.evaluate(sub_expr, cage_env, [new_limit])
 
         # Function Calls
         proc = self.evaluate(op, env, local_max)
