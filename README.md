@@ -1,7 +1,11 @@
 # Shapeshifter Agent Language Design
 
 ## Overview
-Shapeshifter is an experimental project dedicated to designing an optimal, homoiconic language for building advanced agentic systems, including **Darwin-Gödel Machines** and **HyperAgents**.
+Shapeshifter is an experimental project dedicated to designing an optimal, homoiconic language for building advanced agentic systems, including [**Darwin-Gödel Machines**](https://sakana.ai/dgm/) and [**HyperAgents**](https://arxiv.org/abs/2603.19461).
+
+The agents designing and building Shapeshifter are themselves constructed using this very substrate. This creates a recursive feedback loop where the language-building substrate evolves through its own experience, refining its primitives as it observes and implements its own growth.
+
+In the future, Shapeshifter will serve as the cognitive core for high-integrity autonomous systems. Candidate environments for integration include the [**Schwarzschild-Assembly**](https://github.com/roydsouza/schwarzschild-assembly) "Dark Factory" for resilient manufacturing coordination and the [**Tachyon-Tongs**](https://github.com/roydsouza/tachyon_tongs) Agentic Firewall for hyper-intelligent security mitigation and packet-logic transformation.
 
 The project follows a "First Principles" approach, starting with a Python-embedded DSL (Domain Specific Language) that enables agents to treat their own code as mutable data.
 
