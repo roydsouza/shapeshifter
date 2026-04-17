@@ -100,7 +100,7 @@ class ShapeshifterInterpreter:
 
         elif op == 'lambda':
             (_, params, body) = expr
-            return lambda *args: self.evaluate(body, Env(params, args, env), local_max)
+            return lambda *args: self.evaluate(body, Env(params, args, env), None)
 
         elif op == 'run_with_gas':
             (_, limit, sub_expr) = expr
