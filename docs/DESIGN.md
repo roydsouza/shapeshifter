@@ -56,6 +56,14 @@ We considered full OS-level sandboxing (Docker, separate processes), but chose *
 >   isolated from the host Python runtime.
 >
 > This gap is tracked as Task 012 (see `coordination/TASKS.md`).
+>
+> **[KNOWN LIMITATION — Cage Propagation]**: The current `run_with_gas` mechanism only
+> effectively cages **directly-inlined** expressions. When a sandboxed expression calls a
+> named DSL function (a lambda stored in `global_env`), the local gas budget is lost
+> during the dispatch into the lambda body. This means mutations calling recursive global
+> functions are currently subject only to the **Global Hard Ceiling (500 steps)**, not
+> their specific local mutation budget. Solving this requires propagating `local_max`
+> through the function dispatch layer (Task-TBD).
 
 ### Observability: Narrative Telemetry (The "Human-in-the-Loop" Mandate)
 We prioritize **Human Legibility** from the start to prevent the Darwinian loop from becoming an opaque "black box."
