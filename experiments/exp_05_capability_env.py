@@ -28,10 +28,15 @@ def test_capability_integration():
     
     interp.global_env['print'] = buffered_print
     
-    # We must patch the interpreter's internal whitelist for this test 
-    # if we want to test print, OR just test a whitelisted symbol.
+    print("Evaluating whitelisted logic (print) in a cage...")
+    interp.evaluate(['run_with_gas', 10, ['print', ['quote', 'MUTATION: Buffered output test.']]])
     
-    print("Evaluating whitelisted logic in a cage...")
+    # Verification
+    if len(side_effect_buffer) > 0 and 'MUTATION' in side_effect_buffer[0]:
+        print(f"PASS: Buffer captured: {side_effect_buffer}")
+    else:
+        print(f"FAIL: Buffer empty or incorrect: {side_effect_buffer}")
+
     res = interp.evaluate(['run_with_gas', 10, ['add', 10, 20]])
     print(f"Result: {res} (PASS: Arithmetic worked)")
 

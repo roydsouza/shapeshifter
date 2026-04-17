@@ -62,7 +62,7 @@ class ShapeshifterInterpreter:
 
     def _build_capability_env(self):
         """Builds a StrictEnv for Phase 2a containing only whitelisted primitives."""
-        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin']
+        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print']
         cage_env = StrictEnv()
         
         # Populate purely from the global_env whitelisted keys
