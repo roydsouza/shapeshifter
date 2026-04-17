@@ -3,6 +3,11 @@ import time
 import sys
 from otel_sim import otel
 
+from transparency.lineage_logger import LineageLogger
+from transparency.mutation_gate import MutationGate
+from transparency.regression_sentinel import RegressionSentinel
+from transparency.landscape_renderer import LandscapeRenderer
+
 class CapabilityError(Exception):
     """Raised when a symbol is accessed in a capability-gated environment that is not in the whitelist."""
     pass
@@ -37,7 +42,13 @@ class ShapeshifterInterpreter:
         self.global_env = self._default_env()
         self.max_steps = max_steps
         self.step_count = 0
-        
+ 
+        # Transparency Components
+        self.lineage = LineageLogger()
+        self.gate = MutationGate()
+        self.sentinel = RegressionSentinel()
+        self.renderer = LandscapeRenderer()
+         
         # Safety Ceiling: We must stay below the Python recursion limit (usually 1000)
         # to ensure the interpreter's own gas limits catch loops first.
 
@@ -72,10 +83,19 @@ class ShapeshifterInterpreter:
                 cage_env[symbol] = self.global_env[symbol]
         return cage_env
 
+    def _is_self_evaluating(self, expr):
+        return not isinstance(expr, (list, tuple, str))
+
     def evaluate(self, expr, env=None, local_max=None):
         if env is None:
             env = self.global_env
         
+        # Lineage: Log entry into evaluation frame
+        self.lineage.log_entry(expr, env)
+ 
+        # Regression: Check if we are diverging from known state
+        self.sentinel.verify_parity(expr, env)
+
         # 1. Global Hard Ceiling Check
         self.step_count += 1
         if self.step_count > self.max_steps:
