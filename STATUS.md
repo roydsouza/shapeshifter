@@ -1,19 +1,20 @@
 # Shapeshifter Status
 
 **Status:** ACTIVE
-**Current Phase:** Phase 1 (First Principles) reaching stability.
+**Current Phase:** Phase 2 (Darwin-Gödel Dynamics) — Initializing.
 **Active Entity:** Agent Forge (Antigravity)
 
 ## System Health
 - [x] Forge/Crucible/Analyst Handshake
-- [x] Homoiconic Core (v1.0)
+- [x] Homoiconic Core (v1.1 - Lambda Isolation Fixed)
 - [x] OTel sensory substrate (v1.0)
-- [x] Gas Limit Safety Rail (v1.0)
+- [x] Gas Limit Safety Rail (v1.1 - Isolated Budgets)
 
 ## Recent Milestones
-- **Experiment 01:** Successfully demonstrated "Code as Data" self-modification.
-- **Experiment 02:** Successfully integrated OTel metrics for "Performance Awareness."
+- **Phase 1 Gate Cleared:** Successfully resolved final safety debt (DEF-003, DEF-004).
+- **Protocol Hardened:** Implemented strict supervised review protocol with mandatory checklists.
+- **DGM Theory Matched:** Documented "Nervous System vs. Muscles" rationale for DSL selection.
 - **Experiment 03:** Successfully achieved **Recursive Self-Improvement**, where the optimizer is defined *inside* the DSL.
 
 ## Active Blockers
-None. Ready to move to **Phase 2: Darwin-Gödel Dynamics**.
+- **Phase 2a Clearance:** Awaiting Analyst final sign-off on Task 012 (Cage Host-Effect Containment) strategy implementation.
