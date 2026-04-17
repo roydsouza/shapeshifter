@@ -57,12 +57,13 @@ class ShapeshifterInterpreter:
             'first': lambda x: x[0] if x else None,
             'rest': lambda x: x[1:] if x else [],
             'cons': lambda x, y: [x] + y,
+            'not': operator.not_,
         })
         return env
 
     def _build_capability_env(self):
         """Builds a StrictEnv for Phase 2a containing only whitelisted primitives."""
-        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print']
+        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print', 'not', 'and', 'or']
         cage_env = StrictEnv()
         
         # Populate purely from the global_env whitelisted keys
@@ -132,6 +133,21 @@ class ShapeshifterInterpreter:
             for sub_expr in expr[1:]:
                 res = self.evaluate(sub_expr, env, local_max)
             return res
+
+        elif op == 'and':
+            res = True
+            for arg in expr[1:]:
+                res = self.evaluate(arg, env, local_max)
+                if not res:
+                    return False
+            return res
+
+        elif op == 'or':
+            for arg in expr[1:]:
+                res = self.evaluate(arg, env, local_max)
+                if res:
+                    return res
+            return False
 
         elif op == 'run_with_gas':
             (_, limit, sub_expr) = expr
