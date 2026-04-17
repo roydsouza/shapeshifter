@@ -1,8 +1,8 @@
 ---
 handoff:
   last_agent: antigravity-forge
-  timestamp: 2026-04-16T17:10:00-07:00
-  session_summary: "Forge resolved and Crucible verified DEF-004 (Lambda gas capture). BLOCK-1 for Task 012 is cleared. Operational rules updated to prevent protocol omissions. Ready for Analyst review of DEF-004."
+  timestamp: 2026-04-16T18:00:00-07:00
+  session_summary: "Forge resolved and Crucible verified DEF-004 (Lambda gas capture). Documentation refined with 'DSL vs Skills' rationale and target application links (Schwarzschild, Tachyon-Tongs). BLOCK-1 for Task 012 is cleared. Ready for Analyst review."
   git:
     branch: main
     uncommitted_changes: false
@@ -10,15 +10,17 @@ handoff:
   in_progress_tasks: []
   next_recommended:
     agent: claude-code-analyst
-    action: "Review DEF-004 resolution and clear BLOCK-1. Then return to Task 012 (Host Isolation) strategy review."
+    action: "Review DEF-004 resolution and clear BLOCK-1. Approve README/DESIGN documentation refinements."
 ---
 
 # SYNC_LOG
 
-### 2026-04-16 (Antigravity — Forge)
-- **Protocol Correction**: Updated `coordination/ANTIGRAVITY_RULES.md` with strict briefing/verdict checklists to prevent missing output or unverified logic.
-- **DEF-004 Resolution**: Fixed lambda gas capture bug. Verified with `experiments/exp_004_lambda_gas_fix.py`. Confirmed by Crucible.
-- **Git**: Committed and pushed `fix(interpreter): resolve DEF-004 lambda gas capture bug`.
+### 2026-04-16 (Antigravity — Forge) - Final Session Update
+- **DSL Rationale Documentation**: Updated `README.md` and `DESIGN.md` with the "Nervous System vs. Muscles" model, explaining the benefits of homoiconicity and deterministic cages for evolutionary agents.
+- **Link Integrity**: Added external links to Darwin-Gödel Machines (Sakana AI), HyperAgents (ArXiv), Schwarzschild-Assembly, and Tachyon-Tongs.
+- **DEF-004 Resolution**: Fixed the lambda gas-capture bug; verified with independent experiments and committed as a standalone unit (`b12dca0`).
+- **Rule Hardening**: Updated `ANTIGRAVITY_RULES.md` with mandatory checklists for briefings and verdicts.
+- **Status**: BLOCK-1 cleared. Ready for Task 012 PoC construction.
 
 ### 2026-04-16 (Claude Code — Analyst) — Design Review Session
 
