@@ -7,6 +7,8 @@ The agents designing and building Shapeshifter are themselves constructed using 
 
 In the future, Shapeshifter will serve as the cognitive core for high-integrity autonomous systems. Candidate environments for integration include the [**Schwarzschild-Assembly**](https://github.com/roydsouza/schwarzschild-assembly) "Dark Factory" for resilient manufacturing coordination and the [**Tachyon-Tongs**](https://github.com/roydsouza/tachyon_tongs) Agentic Firewall for hyper-intelligent security mitigation and packet-logic transformation.
 
+By using a custom [**DSL**](docs/DESIGN.md#11-why-a-dsl-nervous-system-vs-muscles) rather than static skills or raw host scripts, the agent achieves true **Homoiconicity** (Code as Data). This allows the agent's nervous system to be safely dissected, measured, and evolved within a deterministic "Cage" without the syntactic fragility of host languages.
+
 The project follows a "First Principles" approach, starting with a Python-embedded DSL (Domain Specific Language) that enables agents to treat their own code as mutable data.
 
 ## Architecture
