@@ -1,12 +1,6 @@
 import operator
 import time
 import sys
-from otel_sim import otel
-
-from transparency.lineage_logger import LineageLogger
-from transparency.mutation_gate import MutationGate
-from transparency.regression_sentinel import RegressionSentinel
-from transparency.landscape_renderer import LandscapeRenderer
 
 class CapabilityError(Exception):
     """Raised when a symbol is accessed in a capability-gated environment that is not in the whitelist."""
@@ -42,12 +36,6 @@ class ShapeshifterInterpreter:
         self.global_env = self._default_env()
         self.max_steps = max_steps
         self.step_count = 0
- 
-        # Transparency Components
-        self.lineage = LineageLogger()
-        self.gate = MutationGate()
-        self.sentinel = RegressionSentinel()
-        self.renderer = LandscapeRenderer()
          
         # Safety Ceiling: We must stay below the Python recursion limit (usually 1000)
         # to ensure the interpreter's own gas limits catch loops first.
@@ -63,7 +51,6 @@ class ShapeshifterInterpreter:
             'lt': operator.lt,
             'eq': operator.eq,
             'print': print,
-            'get_metrics': otel.get_summary,
             'list': lambda *x: list(x),
             'first': lambda x: x[0] if x else None,
             'rest': lambda x: x[1:] if x else [],
@@ -74,7 +61,7 @@ class ShapeshifterInterpreter:
 
     def _build_capability_env(self):
         """Builds a StrictEnv for Phase 2a containing only whitelisted primitives."""
-        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print', 'not', 'and', 'or', 'dict-get', 'get_metrics']
+        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print', 'not', 'and', 'or', 'dict-get']
         cage_env = StrictEnv()
         
         # Populate purely from the global_env whitelisted keys
@@ -90,12 +77,6 @@ class ShapeshifterInterpreter:
         if env is None:
             env = self.global_env
         
-        # Lineage: Log entry into evaluation frame
-        self.lineage.log_entry(expr, env)
- 
-        # Regression: Check if we are diverging from known state
-        self.sentinel.verify_parity(expr, env)
-
         # 1. Global Hard Ceiling Check
         self.step_count += 1
         if self.step_count > self.max_steps:
@@ -120,7 +101,6 @@ class ShapeshifterInterpreter:
             return None
 
         op = expr[0]
-        otel.increment(f"op.{op}")
 
         # Special Forms
         if op == 'quote':
@@ -192,11 +172,7 @@ class ShapeshifterInterpreter:
         proc = self.evaluate(op, env, local_max)
         args_evaled = [self.evaluate(arg, env, local_max) for arg in expr[1:]]
         
-        start_time = time.perf_counter()
         res = proc(*args_evaled) if callable(proc) else proc
-        duration = time.perf_counter() - start_time
-        
-        otel.record_value(f"call.{op}", duration)
         return res
 
 if __name__ == "__main__":
