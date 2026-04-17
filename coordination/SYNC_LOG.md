@@ -1,19 +1,95 @@
 ---
 handoff:
-  last_agent: antigravity-analyst
-  timestamp: 2026-04-16T14:52:00-07:00
-  session_summary: "Analyst reviewed and APPROVED DEF-003 Escalation. Phase 1 (First Principles) is officially CLEARED. Repository is restructured, documented (DESIGN/REFERENCE/IDEAS), and verified. Supervised Review Protocol (Strict HITL) is now in effect."
+  last_agent: antigravity-forge
+  timestamp: 2026-04-16T17:10:00-07:00
+  session_summary: "Forge resolved and Crucible verified DEF-004 (Lambda gas capture). BLOCK-1 for Task 012 is cleared. Operational rules updated to prevent protocol omissions. Ready for Analyst review of DEF-004."
   git:
     branch: main
     uncommitted_changes: false
     unpushed_commits: 0
   in_progress_tasks: []
   next_recommended:
-    agent: antigravity-forge
-    action: "Advance to Phase 2. Implement 'Agentic Mirror' (src/forge.py and src/crucible.py) to automate the generative Darwinian loop. Follow the Strict HITL protocol (Halt after Briefing, Halt after Verdict)."
+    agent: claude-code-analyst
+    action: "Review DEF-004 resolution and clear BLOCK-1. Then return to Task 012 (Host Isolation) strategy review."
 ---
 
 # SYNC_LOG
+
+### 2026-04-16 (Antigravity — Forge)
+- **Protocol Correction**: Updated `coordination/ANTIGRAVITY_RULES.md` with strict briefing/verdict checklists to prevent missing output or unverified logic.
+- **DEF-004 Resolution**: Fixed lambda gas capture bug. Verified with `experiments/exp_004_lambda_gas_fix.py`. Confirmed by Crucible.
+- **Git**: Committed and pushed `fix(interpreter): resolve DEF-004 lambda gas capture bug`.
+
+### 2026-04-16 (Claude Code — Analyst) — Design Review Session
+
+**Trigger**: Roy requested a full review of DESIGN.md, REFERENCE.md, TASKS.md, ROADMAP.md,
+and IDEAS.md before Phase 2 begins.
+
+**Key findings**:
+
+1. **Operational loop (DESIGN.md §3) was aspirational, not actual.** Experiment 03's
+   "optimizer" hardcodes its decision — it does not read live OTel metrics. Annotated
+   with `[NOT YET IMPLEMENTED]` and the specific gap explained.
+
+2. **Phase 4 (STASIS Convergence) existed in DESIGN.md but not ROADMAP.md.** Added to
+   ROADMAP.md with tasks 018 and 019.
+
+3. **Narrative Telemetry had no implementation path.** Added `[NOT YET IMPLEMENTED]`
+   annotation to DESIGN.md. Created new §5 "Transparency Contract" in DESIGN.md defining
+   the four mandatory components: Lineage Log, Staged Mutation Gate, Regression Sentinel,
+   Fitness Landscape Snapshot. This is Task 016 and gates all Darwin loop work.
+
+4. **Gap 5 (Cage does not constrain host-side effects) filed as HIGH PRIORITY.** Added
+   a detailed design note to DESIGN.md §2 with four candidate mitigations. Tracked as
+   Task 012. This is the first task Forge should pick up.
+
+5. **REFERENCE.md documented 6 gaps:** missing `not`/`and`/`or` (Task 014); missing
+   `begin` form (Task 013); `get_metrics` unusable from DSL without `dict-get` (Task 015);
+   `set` semantics clarified; lambda `local_max` capture bug documented (DEF-004);
+   OTel singleton state bleed documented.
+
+6. **DEF-004 filed**: Lambda closures capture `local_max` at definition time, not call
+   time. Lambdas defined inside `run_with_gas` blocks carry stale cage references when
+   stored in `global_env`. Fix: capture `None`; inherit from call site. Escalation required.
+
+7. **TASKS.md restructured** into mandatory sections 2a (Transparency + Safety, gates
+   everything), 2b (DSL extensions, gates homoiconic loop), 2c (Darwin loop). Task ordering
+   is now explicit and enforced by documentation. Tasks 012–019 added. Task 011 (Agentic
+   Mirror) demoted to a design-decision briefing before any code is written.
+
+8. **IDEAS.md restructured**: prerequisite annotations on every level; Level 2 renamed
+   and repurposed to "Vocabulary Audit" (introspection, runs today); original Level 2
+   (Math Engine) revised to separate *selection* from *generation* and moved to Level 3
+   with correct prerequisites; "Forge vs. Crucible" renamed to "Adversarial Pair" to avoid
+   confusion with coordination protocol entities; 3 new Transparency experiments added
+   (T1: Staged Mutation Gate demo, T2: Fitness Landscape demo, T3: Regression Sentinel demo).
+
+9. **DEFECTS.md cleaned up**: DEF-001/002/003 moved to Resolved section. Group A/B
+   headers (now empty) removed.
+
+**Files changed**: `docs/DESIGN.md`, `docs/REFERENCE.md`, `docs/IDEAS.md`,
+`coordination/TASKS.md`, `coordination/ROADMAP.md`, `coordination/DEFECTS.md`,
+`coordination/SYNC_LOG.md`.
+
+**Next for Forge**: Task 012 (Cage Host-Effect Containment). File as escalation.
+Do not start Task 011 or any Darwin loop work until Tasks 012 and 016 are Analyst-approved.
+
+---
+
+### 2026-04-16 (Claude Code — Analyst) — Task 012 Strategy Review
+
+**Task 012 (Gap 5 / Cage Host-Effect Containment):** CONDITIONAL APPROVAL.
+
+The Hybrid Capability-Buffering strategy is approved as direction. Implementation is
+blocked pending: (1) DEF-004 fixed first in a separate commit; (2) experiment script
+with verbatim stdout embedded in briefing; (3) PoC must demonstrate forbidden-symbol
+rejection, not just print-buffering. Full details in
+`analyst-verdicts/2026-04-16-task-012-analyst-verdict.md`.
+
+**Protocol note**: The Crucible verdict was filed without an attached script or stdout —
+this is a §4 violation. Forge must resolve before re-escalating.
+
+---
 
 ### 2026-04-16 (Antigravity — Analyst)
 - **Escalation Review**: Reviewed [`analyst-inbox/2026-04-16-def-003-escalation.md`](analyst-inbox/2026-04-16-def-003-escalation.md).

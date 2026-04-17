@@ -34,8 +34,10 @@ session. They are not suggestions — they are the operating contract.
 - Run the relevant script before filing. If it throws an exception, fix it first. Do not
   file a briefing for a script that does not run to completion.
 - Write full verbatim stdout to `build-artifacts/YYYY-MM-DD-HHMMSS-<topic>.txt`.
-- Embed the complete verbatim stdout in the briefing under `## Script Output`. Do not
-  summarize, cherry-pick, or paraphrase the output.
+- **Mandatory Briefing Checklist**:
+    - [ ] **Dependency Check**: Confirm no related defects in `DEFECTS.md` are blocking this task.
+    - [ ] **Verbatim Output**: Embed full, unedited stdout in the briefing.
+    - [ ] **Falsification/Rejection**: If the task involves a security/invariant change, the output must demonstrate both a "Pass" and a "Verified Block/Fail."
 - For defect fixes: reference the DEF-XXX id. Fix only that defect per commit.
 - For feature work: reference the TASKS.md id. Scope to the specific task.
 - Do not modify `interpreter.py`'s core `evaluate()` dispatch loop without escalating
@@ -47,8 +49,10 @@ session. They are not suggestions — they are the operating contract.
 
 - Read all relevant source files from disk. Never reason solely from Forge's briefing prose.
 - Re-run the script independently. Your run is the ground truth, not Forge's embedded output.
-- Compare your stdout to Forge's embedded output line-by-line. Any discrepancy — even
-  cosmetic — must be documented in the verdict.
+- **Mandatory Verdict Checklist**:
+    - [ ] **Discrepancy Check**: Compare your stdout to Forge's line-by-line.
+    - [ ] **Commit Separation Violation**: Check if this briefing tries to sneak a defect fix into a feature task (or vice-versa).
+    - [ ] **Negative Space Check**: Verify that Forge demonstrated the "Fail/Rejection" cases, not just the "Happy Path."
 - For defect fixes: verify the specific output criterion stated in DEFECTS.md. If the
   criterion is met, APPROVED. If not, VETOED with the exact discrepancy.
 - Default stance: **find what's wrong before approving**. An APPROVED verdict with no
