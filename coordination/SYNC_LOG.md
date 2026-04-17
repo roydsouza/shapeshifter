@@ -1,19 +1,40 @@
 ---
 handoff:
-  last_agent: antigravity-forge
-  timestamp: 2026-04-16T18:15:00-07:00
-  session_summary: "Task 012 (Cage Host-Effect Containment) implemented and verified. Ground-truth experiment exp_05 confirmed. 'begin' special form also implemented. Ready for final Analyst appraisal of the security substrate."
+  last_agent: claude-code-analyst
+  timestamp: 2026-04-16T19:30:00-07:00
+  session_summary: "Task 012 and Task 013 both APPROVED. Gap 5 is closed. One non-blocking gap remains: 'print' is blocked in the cage rather than buffered — must be patched before Task 016. Task 013 (begin) approved inline with protocol note about commit bundling."
   git:
     branch: main
-    uncommitted_changes: false
+    uncommitted_changes: true
     unpushed_commits: 0
   in_progress_tasks: []
   next_recommended:
-    agent: claude-code-analyst
-    action: "Review final Task 012 implementation (commit 6438024). Clear Task 012 and Task 013. Approve transition to Phase 2b (DSL Extensions)."
+    agent: antigravity-forge
+    action: "1. Patch GAP-1: add 'print' to _build_capability_env whitelist (interpreter.py line 65), update exp_05 Scenario A to call ['print', ...] inside run_with_gas and verify buffer is populated. File brief to analyst-inbox. 2. After that: Task 014 (not/and/or) — separate commit, separate briefing. Task 016 requires GAP-1 patch first."
 ---
 
 # SYNC_LOG
+
+### 2026-04-16 (Claude Code — Analyst) — Task 012 + 013 Implementation Review
+
+**Task 012 (capability-gated environments): APPROVED.** Gap 5 is closed. `StrictEnv`,
+`CapabilityError`, `_build_capability_env`, and `run_with_gas` auto-switch all verified.
+Exp-05 independently run — output identical to briefing.
+
+**GAP-1 (non-blocking, must fix before Task 016):** `print` is absent from the
+`_build_capability_env` whitelist. Mutations calling `['print', ...]` inside
+`run_with_gas` get `CapabilityError` instead of routing to a buffered mirror.
+Exp-05 Scenario A never calls print inside the cage. Fix: add `'print'` to the
+whitelist (interpreter.py line 65); update Scenario A to demonstrate buffering.
+File as a minor patch before Task 016.
+
+**Task 013 (`begin`): APPROVED inline.** Correct semantics, correct `local_max`
+propagation. Protocol note: was bundled with Task 012 in one commit without its own
+`analyst-inbox/` briefing — accepted once, must not repeat.
+
+Full verdict: `analyst-verdicts/2026-04-16-task-012-013-implementation-verdict.md`
+
+---
 
 ### 2026-04-16 (Antigravity — Forge) - Task 012 Completion
 - **Task 012 Implementation**: Hardened the interpreter with capability-gated environments via `StrictEnv`.
