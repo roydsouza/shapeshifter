@@ -1,6 +1,7 @@
 import operator
 import time
 import sys
+from otel_sim import otel
 
 class CapabilityError(Exception):
     """Raised when a symbol is accessed in a capability-gated environment that is not in the whitelist."""
@@ -56,12 +57,13 @@ class ShapeshifterInterpreter:
             'rest': lambda x: x[1:] if x else [],
             'cons': lambda x, y: [x] + y,
             'not': operator.not_,
+            'get_metrics': otel.get_summary,
         })
         return env
 
     def _build_capability_env(self):
         """Builds a StrictEnv for Phase 2a containing only whitelisted primitives."""
-        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print', 'not', 'and', 'or', 'dict-get']
+        whitelist = ['add', 'sub', 'mul', 'div', 'gt', 'lt', 'eq', 'list', 'first', 'rest', 'cons', 'defn', 'lambda', 'begin', 'print', 'not', 'and', 'or', 'dict-get', 'get_metrics']
         cage_env = StrictEnv()
         
         # Populate purely from the global_env whitelisted keys
@@ -69,9 +71,6 @@ class ShapeshifterInterpreter:
             if symbol in self.global_env:
                 cage_env[symbol] = self.global_env[symbol]
         return cage_env
-
-    def _is_self_evaluating(self, expr):
-        return not isinstance(expr, (list, tuple, str))
 
     def evaluate(self, expr, env=None, local_max=None):
         if env is None:
@@ -169,10 +168,15 @@ class ShapeshifterInterpreter:
             return self.evaluate(sub_expr, cage_env, [new_limit])
 
         # Function Calls
+        otel.increment(f"op.{op}")
         proc = self.evaluate(op, env, local_max)
         args_evaled = [self.evaluate(arg, env, local_max) for arg in expr[1:]]
         
+        start_time = time.perf_counter()
         res = proc(*args_evaled) if callable(proc) else proc
+        duration = time.perf_counter() - start_time
+        otel.record_value(f"call.{op}", duration)
+        
         return res
 
 if __name__ == "__main__":
@@ -210,7 +214,8 @@ if __name__ == "__main__":
     print("Testing Local Gas Limit...")
     interp.step_count = 0 # reset for test
     try:
-        interp.evaluate(['run_with_gas', 10, ['forever']])
+        interp.evaluate(['run_with_gas', 5,
+            ['begin', ['add', 1, 1], ['add', 1, 1], ['add', 1, 1]]])
     except Exception as e:
         print(f"Caught expected error: {e}")
 

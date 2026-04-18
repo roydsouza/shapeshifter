@@ -191,10 +191,9 @@ In case of conflict, CLAUDE.md governs.*
 
 ## Environmental Constraints
 
-**EC-1: Shell Argument Limits (ARG_MAX)**
-The M5 environment has a physical limit on shell command length and environment block size. 
-- Forge MUST NOT use large padding strings (e.g., repeating villages) to occupy context.
-- Commands must be kept concise. Local environment variables (e.g., `export PYTHONPATH`) should be used instead of long relative paths.
+**EC-1: Shell Command Conciseness**
+Keep all shell commands concise. Use `PYTHONPATH=src` rather than long
+relative paths. Do not expand `PYTHONPATH` with large environment blocks.
 
 **EC-2: Zero-Trust Verdicts**
 Any Crucible Review Verdict that asserts success without a corresponding [HARDENED WITNESS] terminal log is null and void. Hallucination of success in the face of environmental failure is a Tier-1 Protocol Violation.
