@@ -140,7 +140,7 @@ Mutations are **not applied atomically**. The flow is:
 3. Roy says **"forward"** to apply, **"veto"** to discard (with optional one-sentence rationale).
 4. The decision is appended to the Lineage Log.
 
-This extends the Forge/Crucible/Analyst gating protocol directly into the runtime.
+This extends the Forge/Crucible/Claude Code gating protocol directly into the runtime.
 
 ### 5c. The Regression Sentinel
 After every mutation commit, the full test suite reruns under a `run_with_gas` cage. Any regression triggers an automatic revert, and the reversion event is written to the Lineage Log. No mutation survives that breaks a previously-passing test.

@@ -18,13 +18,14 @@ progresses through numbered **Experiments**, not versioned deployments.
 
 ## §3 The Three Entities
 
-| Entity | Role |
-|---|---|
-| **Forge** (AntiGravity/Gemini) | Primary implementer — writes experiments, fixes defects, evolves the DSL |
-| **Crucible** (AntiGravity/Gemini) | Adversarial auditor — re-runs experiments independently, issues verdicts |
-| **Claude Code** (Analyst) | Supervisory reviewer — architectural decisions, escalations, DEFECTS.md |
+| Entity | Role | Deliverable |
+|---|---|---|
+| **Forge** (AntiGravity/Gemini) | Builder — writes experiments, fixes defects, evolves the DSL | Submission (briefing + verbatim stdout) |
+| **Crucible** (AntiGravity/Gemini) | Reviewer — independently re-runs scripts, issues Review Verdicts | Review Verdict (CLEARED / VETOED) |
+| **Claude Code** | Auditor — architectural decisions, security boundaries, phase gates | Audit Verdict |
 
-See `PROCESS.md` for the complete flow and escalation rules.
+Flow: Forge **submits** → Crucible **reviews** → (if CLEARED) → Claude Code **audits**.
+Both Crucible and Claude Code issue **Verdicts**. See `PROCESS.md` for the complete flow.
 
 ## §4 Completion Criterion (Research Contract)
 
@@ -54,7 +55,7 @@ Fix the defect first (separate commit), then build the feature.
 | **Phase 2** | Darwin-Gödel Dynamics | Generative mutation, sandboxed competition, fitness selection |
 | **Phase 3** | Distributed HyperAgents | Network primitives, distributed evolution |
 
-## §7 Escalate to Claude When
+## §7 Request an Audit from Claude Code When
 
 - Any change to the gas-limit / safety-cage logic in `interpreter.py`
 - A new architectural pattern not implied by the current phase definition
@@ -62,7 +63,7 @@ Fix the defect first (separate commit), then build the feature.
 - Roy has a specific architectural question to surface
 - Any change that touches the core `evaluate` dispatch loop
 
-**Do not escalate:** failed script runs, missing imports, format issues — Crucible handles these.
+**Do not submit for Audit:** failed script runs, missing imports, format issues — Crucible handles these via its Review.
 
 ## §8 Directory Map
 
@@ -72,9 +73,9 @@ Fix the defect first (separate commit), then build the feature.
 | `src/` | Core Shapeshifter implementation |
 | `docs/` | Design and reference documentation |
 | `experiments/` | Research laboratory experiments |
-| `analyst-inbox/` | Forge files briefings here after a run passes |
-| `crucible-verdicts/` | Crucible files its verdicts here |
-| `analyst-verdicts/` | Claude files verdicts here (escalations only) |
+| `analyst-inbox/` | Crucible-cleared submissions awaiting Claude Code Audit |
+| `crucible-verdicts/` | Crucible files its Review Verdicts here |
+| `analyst-verdicts/` | Claude Code files its Audit Verdicts here |
 | `build-artifacts/` | Raw stdout captures from script runs |
 
 File naming convention: `YYYY-MM-DD-HHMMSS-<topic>.md`

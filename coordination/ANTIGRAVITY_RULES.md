@@ -40,7 +40,7 @@ session. They are not suggestions — they are the operating contract.
     - [ ] **Falsification/Rejection**: If the task involves a security/invariant change, the output must demonstrate both a "Pass" and a "Verified Block/Fail."
 - For defect fixes: reference the DEF-XXX id. Fix only that defect per commit.
 - For feature work: reference the TASKS.md id. Scope to the specific task.
-- Do not modify `interpreter.py`'s core `evaluate()` dispatch loop without escalating
+- Do not modify `interpreter.py`'s core `evaluate()` dispatch loop without submitting for Audit
   to Claude via Roy first.
 
 ---
@@ -63,7 +63,7 @@ session. They are not suggestions — they are the operating contract.
 
 ## 3. Safety Rails
 
-- Do not mutate `interpreter.py`'s gas-limit logic without Claude approval (escalation
+- Do not mutate `interpreter.py`'s gas-limit logic without Claude Code Audit approval (see PROCESS.md
   trigger in CLAUDE.md §7).
 - Do not add new special forms to `interpreter.py` without filing a briefing first —
   even if the change seems trivial. Special forms alter the language semantics.

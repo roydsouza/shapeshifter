@@ -81,7 +81,7 @@ This choice aligns with our **Human-in-the-Loop (HITL)** mandate. By buffering e
 
 ---
 
-## 5. Analyst Review Triggers
+## 5. Audit Triggers
 This strategy implies moving from **Unrestricted Symbolic Execution** to **Capability-Gated Execution**. 
-- **Escalation**: Implementation of the Environment White-listing must be reviewed by the Analyst, as it is the "Frontier" of the security cage.
+- **Audit required**: Implementation of the Environment White-listing must be reviewed via Claude Code Audit, as it is the "Frontier" of the security cage.
 - **Verification**: Proof of Concept will demonstrate a mutation attempting to access a forbidden symbol (e.g., `os.system`) and failing.
