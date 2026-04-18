@@ -45,24 +45,31 @@ REQUEST AN AUDIT FROM CLAUDE CODE WHEN:
   — Crucible handles these via Review
 
 FORGE CHECKLIST (every submission)
+  [ ] python3 forge/gate.py session-start  (at session open)
+  [ ] python3 forge/gate.py lock <task-id> (when beginning the task)
   [ ] Run the relevant script(s) — no exceptions
   [ ] Output matches expected values for this experiment/defect
-  [ ] Write full verbatim stdout to build-artifacts/TIMESTAMP.txt
+  [ ] Write full verbatim stdout to build-artifacts/YYYY-MM-DD-<topic>.txt
   [ ] Embed COMPLETE verbatim stdout in briefing (## Script Output)
-  [ ] One submission in-flight at a time — check crucible-verdicts/
+  [ ] python3 forge/gate.py pre-submit  → must produce GATE-PASS
+  [ ] Embed GATE-PASS block verbatim in briefing (## Gate)
   [ ] For defect fixes: reference the DEF-XXX id in the briefing
   [ ] Commit is isolated to this task only — no mixed changes
 
 CRUCIBLE REVIEW CHECKLIST (every Review)
+  [ ] python3 crucible/gate.py session-start  (at session open)
   [ ] Read all artifact files from disk — never from briefing prose
+  [ ] Verify briefing contains a GATE-PASS block from Forge
   [ ] Re-run the relevant script(s) independently
   [ ] Compare own stdout to Forge's embedded output line-by-line
   [ ] Paste `git show <hash> --stat` verbatim — no asserted hashes
   [ ] Confirm commit touches only the claimed task's files
   [ ] All security-relevant changes explicitly named in briefing
-  [ ] [HARDENED WITNESS] Paste verbatim stdout of `python3 src/interpreter.py`
+  [ ] Paste verbatim stdout of `python3 src/interpreter.py` (HARDENED WITNESS)
   [ ] All prior Audit Verdict conditions addressed
-  [ ] Issue verdict to crucible-verdicts/TIMESTAMP-<topic>.md
+  [ ] python3 crucible/gate.py pre-verdict --scripts-run  → must produce GATE-PASS
+  [ ] Embed GATE-PASS block verbatim in verdict (## Gate)
+  [ ] Issue verdict to crucible-verdicts/YYYY-MM-DD-<topic>.md
   [ ] Default stance: find what is wrong before issuing CLEARED
 
 VERDICT OUTCOMES (used by both Crucible and Claude Code)
@@ -70,6 +77,23 @@ VERDICT OUTCOMES (used by both Crucible and Claude Code)
   VETOED       Forge halts and fixes all listed items before resubmitting
   CONDITIONAL  Forge fixes listed items and re-submits to Crucible
   APPROVED     Claude Code only — Audit passed, Forge may mark task done
+
+  AUTOMATIC VETO CONDITIONS (no explicit verdict needed):
+  • Briefing has no GATE-PASS block from Forge
+  • Verdict has no GATE-PASS block from Crucible
+  • HARDENED WITNESS output absent from verdict
+
+AUDIT VERDICT SCORECARD (Claude Code fills in for every Audit Verdict)
+  Automated signals are read from forge/signals.jsonl and crucible/signals.jsonl.
+  Semantic grades (0–5) are assigned by the Analyst:
+
+  gate_pass_rate        : (from signals.jsonl — automated)
+  inflight_violations   : (from signals.jsonl — automated)
+  instruction_fidelity  : did Forge implement exactly what was asked? (0–5)
+  scope_discipline      : did Forge avoid unrequested additions? (0–5)
+  audit_honesty         : were embedded outputs genuine? (0–5)
+
+  Scorecard trend across audits drives charter/protocol evolution proposals.
 ```
 
 ---
@@ -107,7 +131,7 @@ a briefing, Crucible reviews, Roy routes to Audit where required.
 ## Anti-Hallucination Rules
 
 **H-1: Script output is a file, not prose.**
-Forge writes full stdout to `build-artifacts/TIMESTAMP.txt`. The briefing embeds this
+Forge writes full stdout to `build-artifacts/YYYY-MM-DD-<topic>.txt`. The briefing embeds this
 verbatim. Crucible runs the script independently and compares line-by-line.
 
 **H-2: Crucible re-runs independently.**

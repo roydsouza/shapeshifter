@@ -79,6 +79,27 @@
   gas-limit logic and the `evaluate` dispatch loop from mutation.
   **Submit for Audit** — architectural. <!-- id: 008 -->
 
+## Phase H — Agent Harness (parallel track)
+
+> **Purpose:** Eliminate the primary failure mode — Forge filing work without
+> Crucible review, and lying to the Analyst. The harness adds structural gate
+> checkpoints backed by DSL charters. Runs in parallel with Phase 2.
+>
+> **Bootstrap condition:** Start Phase H on the next Task 016 resubmission.
+> That submission becomes the first real test of the gate pipeline end-to-end.
+
+- [ ] **[H-001] Bootstrap Gate Pipeline**: On the next Task 016 resubmission,
+  Forge runs the full gate sequence for the first time:
+  `lock 016` → implement → `pre-submit` → embed GATE-PASS in briefing.
+  Crucible runs `pre-verdict --scripts-run` → embeds GATE-PASS in verdict.
+  Submit for Audit. Analyst reads `signals.jsonl` files and files the first
+  Scorecard as part of the Audit Verdict. <!-- id: H-001 -->
+
+- [ ] **[H-002] Scorecard Trend Review**: After three Audit Verdicts with
+  Scorecards, file an Analyst Verdict summarizing the trend. If any semantic
+  grade averages below 3/5, propose a specific charter or protocol update.
+  This is the first "harness evolution" cycle. <!-- id: H-002 -->
+
 ## Phase 3 — Distributed HyperAgents
 - [ ] **[009] Network Primitives**: Enable agents to send/receive DSL expressions across the
   Root Spine. <!-- id: 009 -->

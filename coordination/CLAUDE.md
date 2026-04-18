@@ -70,18 +70,56 @@ Fix the defect first (separate commit), then build the feature.
 | Path | Purpose |
 |---|---|
 | `coordination/` | Agent governance, tasks, defects, and sync logs |
-| `src/` | Core Shapeshifter implementation |
+| `src/` | Core Shapeshifter implementation (`interpreter.py`, `otel_sim.py`, `harness_lib.py`) |
 | `docs/` | Design and reference documentation |
 | `experiments/` | Research laboratory experiments |
+| `forge/` | Forge's Station: gate script, charter, protocol, lock, signals |
+| `crucible/` | Crucible's Station: gate script, charter, protocol, lock, signals |
+| `dsl/` | DSL language registry: versioned specs and changelog |
 | `analyst-inbox/` | Crucible-cleared submissions awaiting Claude Code Audit |
 | `crucible-verdicts/` | Crucible files its Review Verdicts here |
 | `analyst-verdicts/` | Claude Code files its Audit Verdicts here |
 | `build-artifacts/` | Raw stdout captures from script runs |
 
-File naming convention: `YYYY-MM-DD-HHMMSS-<topic>.md`
+File naming convention: `YYYY-MM-DD-<topic>.md` (briefings, verdicts)
 
 ## §9 Synchronization Protocol
 
 - Update `coordination/SYNC_LOG.md` (YAML frontmatter + prose) before every session end or context switch.
 - Use `git` at the repo root for versioned state capture.
 - Run `python3 ~/antigravity/scripts/handoff.py` on session exit (per station-wide convention).
+
+## §10 Harness Audit Responsibilities
+
+The Agent Harness (forge/, crucible/, dsl/) is governed by Claude Code.
+Forge and Crucible may not modify their charters, protocols, or the harness
+library without an APPROVED Audit Verdict.
+
+**At every Audit Verdict, Claude Code must:**
+
+1. Read `forge/signals.jsonl` and `crucible/signals.jsonl` to compute
+   automated gate metrics (gate_pass_rate, inflight_violations).
+2. Score semantic grades (instruction_fidelity, scope_discipline, audit_honesty)
+   based on the submission under review.
+3. Append a `## Scorecard` section to the Audit Verdict with both automated
+   signals and semantic grades.
+4. If a pattern is observed across multiple audits (e.g., scope_discipline
+   consistently low), propose a specific charter or protocol update in the
+   same verdict — naming the exact file and the proposed DSL change.
+5. If a DSL language improvement is identified, describe the new primitive or
+   form and add an entry to `dsl/CHANGELOG.md` as part of the verdict.
+
+**Audit Verdict template addition:**
+
+    ## Scorecard
+    ### Automated Signals (from signals.jsonl)
+    - gate_pass_rate: X/Y
+    - inflight_violations: N
+    ### Semantic Grades
+    - instruction_fidelity: N/5 — <one-line rationale>
+    - scope_discipline:     N/5 — <one-line rationale>
+    - audit_honesty:        N/5 — <one-line rationale>
+    ### Proposed Harness Changes
+    - <specific charter/protocol change if warranted, or "none">
+    ### DSL Evolution
+    - <proposed primitive/form change if warranted, or "none">

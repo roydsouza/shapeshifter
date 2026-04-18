@@ -15,7 +15,35 @@ The project follows a "First Principles" approach, starting with a Python-embedd
 The project mirrors the **Schwarzschild Assembly** operational model:
 - **Agent Forge (Antigravity/Gemini):** Primary implementer.
 - **Agent Crucible (Antigravity/Gemini):** Strategic auditor and critique.
-- **Analyst (Claude Code):** Supervisory review and architectural calibration.
+- **Analyst (Claude Code):** Supervisory audit and architectural calibration.
+
+## The Harness — Agents on Rails
+
+Forge and Crucible each operate inside a **Harness**: a Python gate script
+(`forge/gate.py`, `crucible/gate.py`) backed by a DSL-encoded **Charter**
+(the three policy rules each agent must follow) and a **Protocol** (the
+workflow steps for each checkpoint).
+
+**Guard rails** block forward progress when charter rules are violated — a
+briefing cannot be filed without a `GATE-PASS` block. **Accelerator rails**
+give agents automated superpowers at checkpoints: the gate runs the
+interpreter self-tests, checks the in-flight lock, and verifies governance
+files haven't been touched, all in one command.
+
+The Analyst (Claude Code) audits the gate signals over time and proposes
+charter and protocol updates — tightening rules where violations are observed,
+relaxing them where they generate false friction. The DSL programs evolve;
+the language itself is versioned in `dsl/` with a frozen spec per version.
+
+This is the recursive core of the project: the language being built is also
+the language that governs the agents building it.
+
+Quick start for agents:
+
+    python3 forge/gate.py session-start          # every session
+    python3 forge/gate.py lock 016               # when starting a task
+    python3 forge/gate.py pre-submit             # before every briefing
+    python3 crucible/gate.py pre-verdict --scripts-run  # before every verdict
 
 ## Design Philosophy
 1. **Homoiconicity:** Code = Data. The agent can use standard list-processing functions to introspect and rewrite its own logic.
