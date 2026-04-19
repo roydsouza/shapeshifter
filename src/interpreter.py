@@ -70,10 +70,24 @@ class ShapeshifterInterpreter:
         """
         def _mirror_exec(cmd):
             # cmd is expected to be a list of strings
-            allowlist = ['python3', 'git', 'ls', 'cat', 'mkdir', 'rm', 'mv']
+            allowlist = ['python3', 'git', 'ls', 'cat', 'mkdir']
             if not isinstance(cmd, list) or not cmd or cmd[0] not in allowlist:
                 target = cmd[0] if (isinstance(cmd, list) and cmd) else str(cmd)
                 raise CapabilityError(f"Security Violation: Command '{target}' is not in the mirror allowlist.")
+            
+            # DEF-008: Argument Hardening
+            if cmd[0] == 'python3':
+                # Block flags to prevent breakout (e.g., python3 -c "import os; ...")
+                if any(arg.startswith('-') for arg in cmd[1:]):
+                    raise CapabilityError(f"Security Violation: Python flags are not permitted in mirror mode.")
+            
+            if cmd[0] == 'git':
+                # Restrict to safe subcommands
+                git_whitelist = ['diff', 'log', 'status', 'rev-parse', 'show']
+                if len(cmd) < 2 or cmd[1] not in git_whitelist:
+                    sub = cmd[1] if len(cmd) > 1 else 'None'
+                    raise CapabilityError(f"Security Violation: Git subcommand '{sub}' is not permitted.")
+            
             r = subprocess.run(cmd, capture_output=True, text=True)
             return {'stdout': r.stdout, 'stderr': r.stderr, 'exit': r.returncode}
 

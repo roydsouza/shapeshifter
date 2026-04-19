@@ -26,3 +26,5 @@
 - [x] **DEF-004** — Lambda `local_max` capture bug. Fixed by Forge 2026-04-16 (commit `b12dca0`). Verified by Analyst directly against `src/interpreter.py` line 103 and `experiments/exp_004_lambda_gas_fix.py`.
 - [x] **DEF-006** — [AUDIT] `mirror-exec` allowlist implemented. Fixed by Forge 2026-04-19. Verified via security unit test.
 - [x] **DEF-007** — `src/crucible.py` refactored to delegate to DSL. Fixed by Forge 2026-04-19. Verified via render_landscape test.
+- [x] **DEF-008** — [AUDIT] `mirror-exec` argument hardening. Fixed by Forge 2026-04-19. Verified via flag/subcommand unit tests.
+- [x] **DEF-009** — [AUDIT] `_GOVERNANCE_FILES` expanded to include harness. Fixed by Forge 2026-04-19. Verified via gate self-monitoring check.

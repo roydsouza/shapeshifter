@@ -72,6 +72,13 @@ _GOVERNANCE_FILES = [
     "coordination/PROCESS.md",
     "coordination/CLAUDE.md",
     "coordination/ANTIGRAVITY_RULES.md",
+    "forge/gate.py",
+    "forge/charter.py",
+    "forge/protocol.py",
+    "crucible/gate.py",
+    "crucible/charter.py",
+    "crucible/protocol.py",
+    "src/harness_lib.py",
 ]
 
 

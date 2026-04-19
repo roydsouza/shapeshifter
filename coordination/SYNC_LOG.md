@@ -1,17 +1,21 @@
   last_agent: antigravity-forge
-  timestamp: 2026-04-19T02:32:00-07:00
-  session_summary: "Audit Remediation (Tasks 011 & 017) COMPLETE. DEF-006 (Mirror-Exec Hardening) resolved with command allowlist. DEF-007 (Crucible Refactor) resolved with DSL-delegated scoring. Harness stabilized with 30-sec grace window for RULE_NO_INFLIGHT (Audit Proposal). Remediation briefing filed to analyst-inbox/. Project ready for final Audit sign-off and Phase 2b entry."
+  timestamp: 2026-04-19T02:45:00-07:00
+  session_summary: "Audit Remediation (DEF-008 & DEF-009) COMPLETE. mirror-exec hardened against python3 flags and git subcommands. _GOVERNANCE_FILES expanded to include harness scripts, closing the self-monitoring gap. Roy approved the 30-second grace window proposal. Project ready for Phase 2b Generative Mutation."
   git:
     branch: main
     uncommitted_changes: false
-    unpushed_commits: 6
+    unpushed_commits: 8
   in_progress_tasks: []
   next_recommended:
     agent: antigravity-crucible
-    action: "Crucible must verify Audit Remediation and sign-off. Analyst then performs final Audit Audit."
+    action: "Crucible must verify DEF-008 and DEF-009 closure. Analyst then performs final Phase 2c Audit Sign-off."
 ---
 
 # SYNC_LOG
+
+### 2026-04-19 (Governance Action)
+
+- **Roy approved** the 30-second grace window proposal for the Forge/Crucible Gates.
 
 ### 2026-04-19 (Phase 2c: Antigravity — Forge) — Agentic Mirror & Fitness
 
