@@ -26,6 +26,7 @@ Foundational documentation for the language and laboratory.
 |---|---|
 | [`README.md`](README.md) | Project overview — architecture and philosophy |
 | [`docs/DESIGN.md`](docs/DESIGN.md) | Architectural vision — rationale for homoiconicity and the "Cage" model |
+| [`docs/EVOLUTION.md`](docs/EVOLUTION.md) | Quantitative log of evolutionary wins and learnings |
 | [`docs/REFERENCE.md`](docs/REFERENCE.md) | Language specification — primitives, special forms, and sensing |
 | [`docs/IDEAS.md`](docs/IDEAS.md) | Laboratory manifest — list of planned experiments and applications |
 | [`STATUS.md`](STATUS.md) | Live health board of the project |
