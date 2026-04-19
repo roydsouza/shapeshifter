@@ -8,6 +8,7 @@ that decides when to call them.
 import json
 import subprocess
 import sys
+import os
 from datetime import datetime, date, timezone
 from pathlib import Path
 
@@ -36,6 +37,7 @@ def _write_lock(agent: str, task_id, note: str) -> None:
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     state = {
         "in_flight": task_id,
+        "pid": os.getpid() if task_id else None,
         "locked_at": datetime.now(timezone.utc).isoformat() if task_id else None,
         "note": note,
     }

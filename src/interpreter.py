@@ -70,6 +70,10 @@ class ShapeshifterInterpreter:
         """
         def _mirror_exec(cmd):
             # cmd is expected to be a list of strings
+            allowlist = ['python3', 'git', 'ls', 'cat', 'mkdir', 'rm', 'mv']
+            if not isinstance(cmd, list) or not cmd or cmd[0] not in allowlist:
+                target = cmd[0] if (isinstance(cmd, list) and cmd) else str(cmd)
+                raise CapabilityError(f"Security Violation: Command '{target}' is not in the mirror allowlist.")
             r = subprocess.run(cmd, capture_output=True, text=True)
             return {'stdout': r.stdout, 'stderr': r.stderr, 'exit': r.returncode}
 

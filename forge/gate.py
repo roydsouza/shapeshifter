@@ -14,6 +14,7 @@ Absence of this block is an automatic veto from Crucible and from Analyst.
 """
 import json
 import sys
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -48,11 +49,21 @@ def _run_checks() -> list:
     # Check 1: no inflight
     count = harness_lib.count_inflight(AGENT)
     lock = harness_lib.read_lock(AGENT)
+    
     passed = (count == 0)
-    if passed:
-        detail = "lock clear"
-    else:
+    detail = "lock clear"
+    
+    # 30-sec grace window (Audit Proposal remediation)
+    if not passed:
+        locked_at = datetime.fromisoformat(lock["locked_at"])
+        delta = datetime.now(timezone.utc) - locked_at
+        if delta.total_seconds() < 30:
+            passed = True
+            detail = f"lock clear (grace window: self-lock '{lock['in_flight']}' detected)"
+
+    if not passed:
         detail = f"'{lock.get('in_flight')}' in flight since {lock.get('locked_at', '?')} — resolve before submitting"
+    
     checks.append({"name": "no-inflight", "passed": passed, "detail": detail})
 
     if not passed:

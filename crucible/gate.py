@@ -14,6 +14,7 @@ verbatim in every verdict filed to crucible-verdicts/.
 Absence of this block is an automatic veto from Analyst.
 """
 import sys
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
