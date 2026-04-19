@@ -1,6 +1,8 @@
 import operator
 import time
 import sys
+import subprocess
+from pathlib import Path
 from otel_sim import otel
 
 class CapabilityError(Exception):
@@ -60,6 +62,24 @@ class ShapeshifterInterpreter:
             'get_metrics': otel.get_summary,
         })
         return env
+
+    def enable_mirror_mode(self):
+        """Injects structural host primitives for the Agentic Mirror (Forge/Crucible logic).
+        NOTE: These symbols are NOT in the StrictEnv whitelist, ensuring they cannot be
+        called by sandboxed mutations.
+        """
+        def _mirror_exec(cmd):
+            # cmd is expected to be a list of strings
+            r = subprocess.run(cmd, capture_output=True, text=True)
+            return {'stdout': r.stdout, 'stderr': r.stderr, 'exit': r.returncode}
+
+        self.global_env.update({
+            'mirror-read': lambda p: Path(p).read_text(),
+            'mirror-write': lambda p, c: Path(p).write_text(c),
+            'mirror-list-dir': lambda p: [f.name for f in Path(p).iterdir()],
+            'mirror-exec': _mirror_exec,
+            'mirror-exists': lambda p: Path(p).exists(),
+        })
 
     def _build_capability_env(self):
         """Builds a StrictEnv for Phase 2a containing only whitelisted primitives."""
