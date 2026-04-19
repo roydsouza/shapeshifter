@@ -88,17 +88,26 @@
 > **Bootstrap condition:** Start Phase H on the next Task 016 resubmission.
 > That submission becomes the first real test of the gate pipeline end-to-end.
 
-- [ ] **[H-001] Bootstrap Gate Pipeline**: On the next Task 016 resubmission,
+- [x] **[H-001] Bootstrap Gate Pipeline**: On the next Task 016 resubmission,
   Forge runs the full gate sequence for the first time:
   `lock 016` → implement → `pre-submit` → embed GATE-PASS in briefing.
   Crucible runs `pre-verdict --scripts-run` → embeds GATE-PASS in verdict.
   Submit for Audit. Analyst reads `signals.jsonl` files and files the first
   Scorecard as part of the Audit Verdict. <!-- id: H-001 -->
+  **Done:** First Scorecard filed in `analyst-verdicts/2026-04-18-task-016-audit-verdict-v5.md`
 
-- [ ] **[H-002] Scorecard Trend Review**: After three Audit Verdicts with
+- [x] **[H-002] Scorecard Trend Review**: After three Audit Verdicts with
   Scorecards, file an Analyst Verdict summarizing the trend. If any semantic
   grade averages below 3/5, propose a specific charter or protocol update.
   This is the first "harness evolution" cycle. <!-- id: H-002 -->
+  **Done:** `analyst-verdicts/2026-04-19-h002-trend-review.md` — scope_discipline
+  root cause identified as DEF-008 charter gap. One charter change proposed.
+
+- [ ] **[H-003] Scorecard Trend Review (Cycle 2)**: After three more Audit Verdicts
+  with Scorecards (Scorecards 4, 5, 6), file an Analyst Verdict summarizing the trend.
+  Check whether DEF-008 resolution improved scope_discipline. Check whether
+  instruction_fidelity dip on Scorecard 3 was a one-off or the start of a pattern.
+  <!-- id: H-003 -->
 
 ## Phase 3 — Distributed HyperAgents
 - [ ] **[009] Network Primitives**: Enable agents to send/receive DSL expressions across the

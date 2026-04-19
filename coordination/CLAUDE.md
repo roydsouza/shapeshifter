@@ -123,3 +123,31 @@ library without an APPROVED Audit Verdict.
     - <specific charter/protocol change if warranted, or "none">
     ### DSL Evolution
     - <proposed primitive/form change if warranted, or "none">
+
+**Scorecard Trend Review (H-00N cycle):**
+
+After every **three** Audit Verdicts that include a Scorecard, Claude Code must
+file a standalone Trend Review verdict:
+
+    File: analyst-verdicts/YYYY-MM-DD-h00N-trend-review.md
+    Trigger: automatically, as part of the third audit in the cycle
+
+The Trend Review must:
+1. Collect all three scorecards into a side-by-side table (grades + averages).
+2. For each semantic grade, identify whether the average is below 3.5/5.
+   - Below 3.5: propose a specific `charter.py` or `protocol.py` DSL change
+     that would structurally prevent the observed failure mode.
+   - 3.5–4.5: note the pattern, propose a watch item for the next cycle.
+   - Above 4.5: note as healthy, no action.
+3. Identify the root cause behind any consistent non-5 grade — distinguish
+   harness gaps (fix in code) from process gaps (fix in charter/protocol).
+4. After filing the Trend Review, add the next H-00(N+1) task to
+   `coordination/TASKS.md` to restart the cycle counter.
+5. Mark H-00N as `[x]` in `coordination/TASKS.md`.
+
+**Emergency threshold:** Any grade average below 3.0/5 triggers an immediate
+charter change proposal in the same Trend Review — do not wait for a pattern.
+
+**Scorecard numbering:** Scorecards are numbered sequentially across all Audit
+Verdicts (Scorecard 1, 2, 3…). The cycle resets the count for the *next* Trend
+Review (Scorecards 4, 5, 6 → H-003, etc.) but the absolute numbering continues.

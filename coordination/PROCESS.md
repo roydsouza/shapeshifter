@@ -94,6 +94,12 @@ AUDIT VERDICT SCORECARD (Claude Code fills in for every Audit Verdict)
   audit_honesty         : were embedded outputs genuine? (0–5)
 
   Scorecard trend across audits drives charter/protocol evolution proposals.
+
+SCORECARD TREND REVIEW (H-00N)
+  Triggers automatically after every 3 Audit Verdicts with Scorecards.
+  Claude Code files it; Roy just types "audit".
+  Output: analyst-verdicts/YYYY-MM-DD-h00N-trend-review.md
+  Action required from Roy only if a charter change is proposed.
 ```
 
 ---
