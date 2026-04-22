@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 *.pyo
 .DS_Store
+
+# Forge/Crucible harness runtime state
+forge/lock.json
+forge/signals.jsonl
+crucible/lock.json
+crucible/signals.jsonl
+build-artifacts/
